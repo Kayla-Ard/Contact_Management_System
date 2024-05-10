@@ -74,33 +74,31 @@ def add_contact(contacts):
         print("Valid email")
         if email not in contacts:
             print("Email added successfully")
-            contacts[email] = email 
+            first_name = input('Enter the first name of the contact you would like to add: ').title()
+            if first_name.isalpha() == True:   
+                print("First name stored successfully")
+                last_name = input('Enter the last name of the contact you would like to add: ').title()
+                if last_name.isalpha() == True:
+                    print("Last name stored successfully")
+                    name = first_name + ' ' + last_name
+                else: 
+                    print("Invalid name entry")
+            else: 
+                print("Invalid name entry")
+
+            phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to add: ')
+            verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
+            if verified_phone_number:
+                print("Valid phone number")
+            else:
+                print("Invalid phone number")
+                
+            contacts[email] = {"Name": name, "Phone Number": phone_number}
+            print(f"Here is your current list of contacts: \n{contacts}")
         else:
             print("That email is already being used in contacts")
     else:
         print("Invalid email")
-    
-    first_name = input('Enter the first name of the contact you would like to add: ').title()
-    if first_name.isalpha() == True:   
-        print("First name stored successfully")
-        last_name = input('Enter the last name of the contact you would like to add: ').title()
-        if last_name.isalpha() == True:
-            print("Last name stored successfully")
-            name = first_name + last_name
-        else: 
-            print("Invalid name entry")
-    else: 
-        print("Invalid name entry")
-
-    phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to add: ')
-    verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
-    if verified_phone_number:
-        print("Valid phone number")
-    else:
-        print("Invalid phone number")
-        
-    contacts[email] = {"Name": name, "Phone Number": phone_number}
-
 
 def edit_contact(contacts):
     email = input("Enter the email address for the contact you would like to make changes to: ").lower()
@@ -114,6 +112,7 @@ def edit_contact(contacts):
                 if last_name_update.isalpha() == True:
                     print("Valid last name")
                     name_update = first_name_update + last_name_update
+                    print(f"The name has been updated. Here is your updated list of contacts: \n{contacts}")
                 else: 
                     print("Invalid name entry")
                     contacts[email]["Name"] = name_update
@@ -125,8 +124,8 @@ def edit_contact(contacts):
             verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", number_update)
             if verified_phone_number:
                 print("Valid phone number") 
-                contacts[email]["Number"] = number_update
-                print("Number updated")
+                contacts[email]["Phone Number"] = number_update
+                print(f"The phone number has been updated. Here is your updated list of contacts: \n{contacts}")
             else:
                 print("Invalid phone number entry")
         else:
@@ -138,27 +137,33 @@ def delete_contact(contacts):
     email = input("Enter the email address for the contact you would like to delete: ").lower()
     if email in contacts:
         del contacts[email]
+        print(f"The contact has been deleted. Here is your updated list of contacts: \n{contacts}")
     else:
         print("The email you entered does not match any of the contacts")
             
 def search_contact(contacts): 
     email = input("Enter the email address for the contact you would like to search: ").lower()
     if email in contacts:
-        print(contacts[email])
+        print(f"Here is contact you searched for: \n{contacts[email]}")
     else:
         print("The email you entered does not match any of the contacts")
 
-def export_contact(contacts):  #NEED TO CHANGE
-    contact_file = open("myfile.json", "w")  
-    json.dump(contacts, contact_file, indent = 6)  
-    print(contact_file)
-    contact_file.close()
+def export_contact(contacts):
+    my_contacts = contacts
+    with open("contacts.txt", "w") as file:
+        for email, name in my_contacts.items():
+            file.write(f"{email}:\n")
+            for contact_info, number in name.items():
+                file.write(f"   {contact_info}: {number}\n")           
 
-def import_contact(): #NEED TO CHANGE
-    file = open("contacts.txt", "r")
-    for line in file.readlines():
-        print(line)
-    file.close()
+def import_contact(): #STILL NOT RIGHT
+    my_contacts = {}
+    with open("my_contacts.txt", "r") as file:
+        for line in file:
+            email, first_name, last_name, phone_number = line.strip().split(": ")
+            my_contacts[email] = {"name": f"{first_name} {last_name}", "phone_number": phone_number}
+    print(my_contacts)
+import_contact()
 
 def contact_management_system():
     contacts_info = {}
@@ -197,7 +202,7 @@ def contact_management_system():
             export_contact(contacts_info)
             
         elif menu_choice == "7":
-            import_contact()
+            import_contact(contacts_info)
             
         elif menu_choice == "8":
             print("Thanks for using the Contact Management System! Good-bye!")
