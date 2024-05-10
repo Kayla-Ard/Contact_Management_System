@@ -65,11 +65,10 @@
 
 
 import re
+import json
 
-contacts = {}
-
-def add_contact():
-    email = input("Enter a valid email address for the contact you would like to add: ")
+def add_contact(contacts):
+    email = input("Enter a valid email address for the contact you would like to add: ").lower()
     matched_email = re.match(r"\b[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z0-9]{2,}\b", email)
     print(matched_email)
     if matched_email:
@@ -77,40 +76,77 @@ def add_contact():
     else:
         print("Invalid email")
     
-    name = input('Enter the first and last name (separated only by a space - Example "John Doe")) of the contact you would like to add: ')
-    if name.isalpha() == True:
+    name = input('Enter the first and last name (separated only by a space - Example "John Doe")) of the contact you would like to add: ').title()
+    if name.isalpha() == True: #THIS KEEPS TELLING ME "INVALID NAME ENTRY" WHICH IS THE ELSE PRINT STATEMENT BUT IT DOES ACTUALLY STORE THE NAME  
         print("Named stored")
     else: 
         print("Invalid name entry")
 
     phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to add: ')
-    pass
+    pass #HOW DO I MAKE SURE WHAT THEY ENTERED FOLLOWS WHAT I ASKED FOR IN THE INPUT?
     
     contacts[email] = {"Name": name, "Phone Number": phone_number}
 
-def edit_contact():
-    pass
 
-def delete_contact():
-    pass
+def edit_contact(contacts): #THIS ISN'T RUNNING CORRECTLY. TELLS ME THE EMAIL I ENTERED DOESN'T MATCH ANY OF THE CONTACTS 
+    email = input("Enter the email address for the contact you would like to make changes to: ").lower()
+    for key in contacts:
+        if contacts[key] == email:
+            edit = input('Would you like to edit the name or the phone number? Enter "1" for name or "2" for phone number": ')
+            if edit == "1":
+                name_update = input('Enter the first and last name (separated only by a space - Example "John Doe") you would like the name changed to: ').title()
+                if name_update.isalpha() == True:
+                    contacts[key]["Name"] = name_update
+                    print("Name updated")
+                else: 
+                    print("Invalid name entry")
+            elif edit == "2":
+                number_update = input('Enter the phone number (separated only by dashes - Example "123-456-7890") you would like the phone number changed to: ')
+                if number_update: #HOW DO I MAKE SURE WHAT THEY ENTERED FOLLOWS WHAT I ASKED FOR IN THE INPUT?
+                    contacts[key]["Number"] = number_update
+                    print("Number updated")
+                else:
+                    print("Invalid number entry")
+            else:
+                print("Invalid entry")
+        else:
+            print("The email you entered does not match any of the contacts")     
+    
+def delete_contact(contacts): #THIS ISN'T RUNNING CORRECTLY. TELLS ME THE EMAIL I ENTERED DOESN'T MATCH ANY OF THE CONTACTS
+    email = input("Enter the email address for the contact you would like to delete: ").lower()
+    for key in contacts:
+        if contacts[key] == email:
+            del contacts[email]
+        else:
+            print("The email you entered does not match any of the contacts")
+            
+def search_contact(contacts): #THIS ISN'T RUNNING CORRECTLY. TELLS ME THE EMAIL I ENTERED DOESN'T MATCH ANY OF THE CONTACTS
+    email = input("Enter the email address for the contact you would like to search: ").lower()
+    for key in contacts:
+        if contacts[key] == email:
+            print(contacts[email])
+        else:
+            print("The email you entered does not match any of the contacts")
 
-def search_contact():
-    pass
+def export_contact(contacts): #NOT SURE IF THIS IS WHAT RYAN IS LOOKING FOR 
+    contact_file = open("myfile.json", "w")  
+    json.dump(contacts, contact_file, indent = 6)  
+    print(contact_file)
+    contact_file.close()
 
-def display_contact():
-    pass
-
-def export_contact():
-    pass
-
-def import_contact():
-    pass
-
+def import_contact(): #NOT SURE IF THIS IS WHAT RYAN IS LOOKING FOR 
+    file = open("contacts.txt", "r")
+    for line in file.readlines():
+        print(line)
+    file.close()
 
 def contact_management_system():
+    contacts_info = {}
     print("Welcome to the Contact Management System!")
+    
     while True: 
         menu_choice = input("""Please select an option below from the menu by entering the number assigned to your desired choice: 
+            
             Menu:
                 1 - Add a new contact
                 2 - Edit an existing contact
@@ -121,23 +157,33 @@ def contact_management_system():
                 7 - Import contacts from a text file
                 8 - Quit         
             """)
+        
         if menu_choice == "1":
-            pass
+            add_contact(contacts_info)
+            
         elif menu_choice == "2":
-            pass
+            edit_contact(contacts_info)
+            
         elif menu_choice == "3":
-            pass
+            delete_contact(contacts_info)
+            
         elif menu_choice == "4":
-            pass
+            search_contact(contacts_info)
+            
         elif menu_choice == "5":
-            pass
+            print(f"Here are all the contacts that are currently stored: \n{contacts_info}")
+            
         elif menu_choice == "6":
-            pass
+            export_contact(contacts_info)
+            
         elif menu_choice == "7":
-            pass
+            import_contact()
+            
         elif menu_choice == "8":
             print("Thanks for using the Contact Management System! Good-bye!")
             break
+        
         else:
             print("You entered an invalid choice")
+
 contact_management_system()
