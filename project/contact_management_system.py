@@ -156,14 +156,13 @@ def export_contact(contacts):
             for contact_info, number in name.items():
                 file.write(f"   {contact_info}: {number}\n")           
 
-def import_contact(): #STILL NOT RIGHT
+def import_contact(): 
     my_contacts = {}
     with open("my_contacts.txt", "r") as file:
         for line in file:
-            email, first_name, last_name, phone_number = line.strip().split(": ")
-            my_contacts[email] = {"name": f"{first_name} {last_name}", "phone_number": phone_number}
+            email, first_name, last_name, phone_number = line.strip().split("  ")
+            my_contacts = {f"{email} {first_name} {last_name} {phone_number}"}
     print(my_contacts)
-import_contact()
 
 def contact_management_system():
     contacts_info = {}
@@ -202,7 +201,7 @@ def contact_management_system():
             export_contact(contacts_info)
             
         elif menu_choice == "7":
-            import_contact(contacts_info)
+            import_contact()
             
         elif menu_choice == "8":
             print("Thanks for using the Contact Management System! Good-bye!")
