@@ -98,6 +98,8 @@ def add_contact(contacts):
             else:
                 print("You entered an invalid choice")
                 
+            custom_field = input("Would you like to add a custom field ")
+            
             contacts[email] = {"Name": name, "Phone Number": phone_number, "Category": category}
             print(f"Here is your current list of contacts: \n{contacts}")
         else:
