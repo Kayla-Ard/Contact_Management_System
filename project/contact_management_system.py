@@ -41,7 +41,7 @@
     # Apply error handling using try, except, else, and finally blocks to manage unexpected issues that may arise during execution.
 
 # Optional Bonus Points
-    # Contact Categories (Bonus):
+    #DONE!      # Contact Categories (Bonus):
     #DONE!      # Implement the ability to categorize contacts into groups (e.g., friends, family, work). Each contact can belong to one or more categories.
     #DONE!      # Contact Search (Bonus): DONE!
                 # Enhance the contact search functionality to allow users to search for contacts by name, phone number, email address, or additional information.
@@ -49,8 +49,8 @@
         # Implement sorting options to display contacts alphabetically by name or based on other criteria.
     # Backup and Restore (Bonus):
         # Add features to create automatic backups of contact data and the ability to restore data from a backup file.
-    # Custom Contact Fields (Bonus):
-        # Allow users to define custom fields for contacts (e.g., birthdays, anniversaries) and store this information.
+    # DONE!     # Custom Contact Fields (Bonus):
+                # Allow users to define custom fields for contacts (e.g., birthdays, anniversaries) and store this information.
 
 
 import re
@@ -90,29 +90,32 @@ def add_contact(contacts):
                     3 - Work
                     """)
             if category == "1":
+                category = "Friend"
                 print("Contact was successfully stored as a friend")
             elif category == "2":
+                category = "Family"
                 print("Contact was successfully stored as a family member")
             elif category == "3":
+                category = "Work"
                 print("Contact was successfully stored as a work colleague")
             else:
                 print("You entered an invalid choice")
                 
-            custom_field_option = input('Would you like to add a custom field to this contact? Enter "yes" or "no"').lower()
+            custom_field_option = input('Would you like to add a custom field to this contact? Enter "yes" or "no: "').lower()
             if custom_field_option == "yes":
                 custom_field_category = input("Enter the custom field category would you like to add? (Examples: Anniversary, Birthday): ").title()
                 custom_field = input(f"Enter the custom field you would like to assign to {custom_field_category}: ").title()
-                contacts[email]["Custom Field"] = custom_field
                 print(f"{custom_field} was successfully stored under {custom_field_option}")
             
-            elif custom_field_option == "no":
-                contacts[email]["Custom Field"] = "None"
-                print('This contact will be stored with a "Custom Field" of "None", incase you would ever like to add one')
+            elif custom_field_option == "no": 
+                custom_field_category = "Custom Field Category"
+                custom_field = "None"
+                print('This contact will be stored with a "Custom Field Category" of "None", incase you would ever like to add one')
             
             else:
                 print("You entered an invalid choice")
             
-            contacts[email] = {"Name": name, "Phone Number": phone_number, "Category": category, "Custom Field": custom_field}
+            contacts[email] = {"Name": name, "Phone Number": phone_number, "Category": category, custom_field_category: custom_field}
             print(f"Here is your current list of contacts: \n{contacts}")
         else:
             print("That email is already being used in contacts")
@@ -176,24 +179,29 @@ def search_contact(contacts):
         else:
             print("The email you entered does not match any of the contacts")
             
-    elif search_choice == "2":
+    elif search_choice == "2": # NOT WORKING
         name = input('Enter the full name of the contact you would like to search: ').title()
-        if name in contacts[email]["Name"]:
-            print(f"Here is contact you searched for: \n{contacts[email]}")
+        if name in contacts[email]["Name"] == name:
+            print(f"Here is contact you searched for: \n{contacts[email][name]}")
         else:
             print("The name you entered does not match any of the contacts")
             
-    elif search_choice == "3":
+    elif search_choice == "3": # NOT WORKING
         phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to search: ')
         verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
-        if phone_number in contacts[email]["Phone Number"]:
+        if verified_phone_number in contacts[email]["Phone Number"]:
             print(f"Here is the contact you searched for: \n{contacts[email]}")
         else:
             print("The phone number you entered does not match any of the contacts")
     
     else:
         print("You entered an invalid choice")
-        
+
+def display_contacts(contacts): #BETTER FORMAT TO PRINT THIS IN SO ITS EASIER TO READ?
+    sorted_contacts = dict(
+    sorted(contacts.items(), key=lambda item: item[1]['Name']))
+    print(f"Here are all the contacts that are currently stored in alphabetical order according to first name: \n{sorted_contacts}")   
+
 def export_contact(contacts):
     my_contacts = contacts
     with open("contacts.txt", "w") as file:
@@ -241,7 +249,7 @@ def contact_management_system():
             search_contact(contacts_info)
             
         elif menu_choice == "5":
-            print(f"Here are all the contacts that are currently stored: \n{contacts_info}")
+            display_contacts(contacts_info)
             
         elif menu_choice == "6":
             export_contact(contacts_info)
