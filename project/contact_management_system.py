@@ -98,9 +98,21 @@ def add_contact(contacts):
             else:
                 print("You entered an invalid choice")
                 
-            custom_field = input("Would you like to add a custom field ")
+            custom_field_option = input('Would you like to add a custom field to this contact? Enter "yes" or "no"').lower()
+            if custom_field_option == "yes":
+                custom_field_category = input("Enter the custom field category would you like to add? (Examples: Anniversary, Birthday): ").title()
+                custom_field = input(f"Enter the custom field you would like to assign to {custom_field_category}: ").title()
+                contacts[email]["Custom Field"] = custom_field
+                print(f"{custom_field} was successfully stored under {custom_field_option}")
             
-            contacts[email] = {"Name": name, "Phone Number": phone_number, "Category": category}
+            elif custom_field_option == "no":
+                contacts[email]["Custom Field"] = "None"
+                print('This contact will be stored with a "Custom Field" of "None", incase you would ever like to add one')
+            
+            else:
+                print("You entered an invalid choice")
+            
+            contacts[email] = {"Name": name, "Phone Number": phone_number, "Category": category, "Custom Field": custom_field}
             print(f"Here is your current list of contacts: \n{contacts}")
         else:
             print("That email is already being used in contacts")
@@ -173,8 +185,9 @@ def search_contact(contacts):
             
     elif search_choice == "3":
         phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to search: ')
+        verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
         if phone_number in contacts[email]["Phone Number"]:
-            print(f"Here is contact you searched for: \n{contacts[email]}")
+            print(f"Here is the contact you searched for: \n{contacts[email]}")
         else:
             print("The phone number you entered does not match any of the contacts")
     
