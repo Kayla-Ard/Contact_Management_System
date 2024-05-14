@@ -4,9 +4,7 @@
 # 5. Error Handling:
     # Apply error handling using try, except, else, and finally blocks to manage unexpected issues that may arise during execution.
 
-# Create a clean and interactive README.md file in your GitHub repository.
-# Include clear instructions on how to run the application and explanations of its features.
-# Provide examples and screenshots, if possible, to enhance user understanding.
+
 # Include a link to your GitHub repository in your project documentation.
 
 
@@ -185,10 +183,11 @@ def search_contact(contacts):
             if last_name.isalpha() == True:
                 name = first_name + ' ' + last_name
                 if name:
-                    for email, name in contacts.items():
-                        print("\nEmail:", email)
-                        for key in name:
-                            print(key + ':', name[key])
+                    for email, value in contacts.items():
+                        for key, info in value.items():
+                            if info == name:
+                                print("\nEmail:", email)
+                                print(key + ':', info)
                 
                 else:
                     print("The name you entered does not match any of the contacts")
@@ -197,18 +196,20 @@ def search_contact(contacts):
         else:
             print("Invalid name entry")
             
-            
-    elif search_choice == "3": # PRINTS IN THE FORMAT THAT I WANT BUT PRINTS ALL THE CONTACTS RATHER THAN JUST THE ONE I AM SEARCHING FOR 
+    elif search_choice == "3": # PRINTS IN THE WEIRD FORMAT, IS ACTUALLY WORKING 
         phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to search: ')
         verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
         if verified_phone_number:
-            for email, phone_number in contacts.items():
-                print("\nEmail:", email)
-                for key in phone_number:
-                    print(key + ':', phone_number[key])
-                else:
-                    print("The phone number you entered does not match any of the contacts")
-    
+            for email, value in contacts.items():
+                for key, info in value.items():
+                        if info == phone_number:
+                            print("\nEmail:", email)
+                            print(value)
+                            # print(key + ':', info)
+                        # else:
+                        #     print("The phone number you entered does not match any of the contacts")
+        else: 
+            print("You entered an invalid phone number")
     else:
         print("You entered an invalid choice")
 
