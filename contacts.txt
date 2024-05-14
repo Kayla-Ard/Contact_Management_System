@@ -1,3 +1,10 @@
-jjj@gmail.com:
-   Name: Jay John
-   Phone Number: 456-987-8765
+kay@yhaoo.com:
+   Name: Kay Ard
+   Phone Number: 222-222-2222
+   Category: Family
+   Custom Field Category: None
+deni@gmail.com:
+   Name: Deni Ard
+   Phone Number: 111-111-1111
+   Category: Friend
+   Custom Field Category: None

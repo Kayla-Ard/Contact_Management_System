@@ -1,56 +1,12 @@
 # Module 3: Mini-Project | Contact Management System
-# Project Requirements
-# Your task is to develop a Contact Management System with the following features:
-# 1. User Interface (UI):
-    # Create a user-friendly command-line interface (CLI) for the Contact Management System.
-    # Display a welcoming message and provide a menu with the following options:
-    # ``` Welcome to the Contact Management System! Menu:
-    # Add a new contact
-    # Edit an existing contact
-    # Delete a contact
-    # Search for a contact
-    # Display all contacts
-    # Export contacts to a text file
-    # Import contacts from a text file *BONUS
-    # Quit "> 
 
-# 2. Contact Data Storage:
-    # Use nested dictionaries as the main data structure for storing contact information.
-    # Each contact should have a unique identifier (e.g., a phone number or email address) as the outer dictionary key.
-    # Store contact details within the inner dictionary, including:
-    # Name
-    # Phone number
-    # Email address
-    # Additional information (e.g., address, notes).
-    
-# 3. Menu Actions:
-    # Implement the following actions in response to menu selections:
-    # Adding a new contact with all relevant details.
-    # Editing an existing contact's information (name, phone number, email, etc.).
-    # Deleting a contact by searching for their unique identifier.
-    # Searching for a contact by their unique identifier and displaying their details.
     # Displaying a list of all contacts with their unique identifiers.
-    # Exporting contacts to a text file in a structured format.
-    # Importing contacts from a text file and adding them to the system. * BONUS
     
-# 4. User Interaction:
-    # Utilize input() to enable users to select menu options and provide contact details.
-    # Implement input validation using regular expressions (regex) to ensure correct formatting of contact information.
+    # Importing contacts from a text file and adding them to the system. * BONUS
 
 # 5. Error Handling:
     # Apply error handling using try, except, else, and finally blocks to manage unexpected issues that may arise during execution.
 
-# Optional Bonus Points
-    #DONE!      # Contact Categories (Bonus):
-    #DONE!      # Implement the ability to categorize contacts into groups (e.g., friends, family, work). Each contact can belong to one or more categories.
-    #DONE!      # Contact Search (Bonus): DONE!
-                # Enhance the contact search functionality to allow users to search for contacts by name, phone number, email address, or additional information.
-    # Contact Sorting (Bonus):
-        # Implement sorting options to display contacts alphabetically by name or based on other criteria.
-    # Backup and Restore (Bonus):
-        # Add features to create automatic backups of contact data and the ability to restore data from a backup file.
-    # DONE!     # Custom Contact Fields (Bonus):
-                # Allow users to define custom fields for contacts (e.g., birthdays, anniversaries) and store this information.
 
 
 import re
@@ -125,7 +81,14 @@ def add_contact(contacts):
 def edit_contact(contacts):
     email = input("Enter the email address for the contact you would like to make changes to: ").lower()
     if email in contacts:
-        edit = input('Would you like to edit the name or the phone number? Enter "1" for name or "2" for phone number": ')
+        edit = input('''What would you like to edit? Select an option from the menu below:
+                     Edit Contact Menu:
+                    1 - Email
+                    2 - Name 
+                    3 - Phone Number
+                    4 - Category
+                    5 - Custom Field Category
+                     ''')
         if edit == "1":
             first_name_update = input('Enter the first name you would like the first name changed to: ').title()
             if first_name_update.isalpha() == True:
@@ -179,29 +142,48 @@ def search_contact(contacts):
         else:
             print("The email you entered does not match any of the contacts")
             
-    elif search_choice == "2": # NOT WORKING
-        name = input('Enter the full name of the contact you would like to search: ').title()
-        if name in contacts[email]["Name"] == name:
-            print(f"Here is contact you searched for: \n{contacts[email][name]}")
+    elif search_choice == "2": # PRINTS IN THE FORMAT THAT I WANT BUT PRINTS ALL THE CONTACTS RATHER THAN JUST THE ONE I AM SEARCHING FOR 
+        first_name = input('Enter the first name of the contact you would like to add: ').title()
+        if first_name.isalpha() == True:   
+            last_name = input('Enter the last name of the contact you would like to add: ').title()
+            if last_name.isalpha() == True:
+                name = first_name + ' ' + last_name
+                if name:
+                    for email, name in contacts.items():
+                        print("\nEmail:", email)
+                        for key in name:
+                            print(key + ':', name[key])
+                
+                else:
+                    print("The name you entered does not match any of the contacts")
+            else: 
+                print("Invalid name entry")
         else:
-            print("The name you entered does not match any of the contacts")
+            print("Invalid name entry")
             
-    elif search_choice == "3": # NOT WORKING
+            
+    elif search_choice == "3": # PRINTS IN THE FORMAT THAT I WANT BUT PRINTS ALL THE CONTACTS RATHER THAN JUST THE ONE I AM SEARCHING FOR 
         phone_number = input('Enter the phone number (separated only by a dash - Example "123-456-7890")) of the contact you would like to search: ')
         verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", phone_number)
-        if verified_phone_number in contacts[email]["Phone Number"]:
-            print(f"Here is the contact you searched for: \n{contacts[email]}")
-        else:
-            print("The phone number you entered does not match any of the contacts")
+        if verified_phone_number:
+            for email, phone_number in contacts.items():
+                print("\nEmail:", email)
+                for key in phone_number:
+                    print(key + ':', phone_number[key])
+                else:
+                    print("The phone number you entered does not match any of the contacts")
     
     else:
         print("You entered an invalid choice")
 
-def display_contacts(contacts): #BETTER FORMAT TO PRINT THIS IN SO ITS EASIER TO READ?
-    sorted_contacts = dict(
-    sorted(contacts.items(), key=lambda item: item[1]['Name']))
-    print(f"Here are all the contacts that are currently stored in alphabetical order according to first name: \n{sorted_contacts}")   
-
+def display_contacts(contacts):
+    sorted_contacts = dict(sorted(contacts.items(), key=lambda item: item[1]['Name']))
+    print("Here is a list of your contacts displayed in alphabetical order: ")
+    for email, name in sorted_contacts.items():
+        print("\nEmail:", email)
+        for key in name:
+            print(key + ':', name[key])
+        
 def export_contact(contacts):
     my_contacts = contacts
     with open("contacts.txt", "w") as file:
@@ -214,8 +196,9 @@ def import_contact():
     my_contacts = {}
     with open("my_contacts.txt", "r") as file:
         for line in file:
-            email, first_name, last_name, phone_number = line.strip().split("  ")
-            my_contacts = {f"{email} {first_name} {last_name} {phone_number}"}
+            email, first_name, last_name, phone_number = line.strip().split(":")
+            my_contacts[email] = {f"{first_name} {last_name} {phone_number}"}
+    print(type(my_contacts)) #JUST MAKING SURE IT IS A DICTIONARY 
     print(my_contacts)
 
 def contact_management_system():
