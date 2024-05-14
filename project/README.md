@@ -17,7 +17,7 @@
 
 **Any time the user gets done entering information in a particular area OR if the user enters invalid information it will take them back to the main menu to select a choice. When the user is done using the contact management system they can simply select "8" from the main menu and it will end the application.**
 
-## Special Features:
+### Special Features:
 - The application has checks for valid emails and phone numbers.
 
 - The application even allows the user to import and export contacts!_
