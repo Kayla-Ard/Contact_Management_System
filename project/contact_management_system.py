@@ -1,12 +1,13 @@
 # Module 3: Mini-Project | Contact Management System
-
-    # Displaying a list of all contacts with their unique identifiers.
     
-    # Importing contacts from a text file and adding them to the system. * BONUS
 
 # 5. Error Handling:
     # Apply error handling using try, except, else, and finally blocks to manage unexpected issues that may arise during execution.
 
+# Create a clean and interactive README.md file in your GitHub repository.
+# Include clear instructions on how to run the application and explanations of its features.
+# Provide examples and screenshots, if possible, to enhance user understanding.
+# Include a link to your GitHub repository in your project documentation.
 
 
 import re
@@ -90,21 +91,31 @@ def edit_contact(contacts):
                     5 - Custom Field Category
                      ''')
         if edit == "1":
+            email_update = input("Enter a valid email address to update the contact: ").lower()
+            matched_email = re.match(r"\b[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z0-9]{2,}\b", email_update)
+            if matched_email:
+                contacts[email_update] = contacts[email]
+                del contacts[email]
+                print(f"The email has been updated. Here is your updated list of contacts: \n{contacts}")
+            else:
+                print("The email you entered does not match any of the contacts")       
+        
+        elif edit == "2":
             first_name_update = input('Enter the first name you would like the first name changed to: ').title()
             if first_name_update.isalpha() == True:
                 print("Valid first name")
                 last_name_update = input('Enter the last name of the contact you would like the last name changed to: ').title()
                 if last_name_update.isalpha() == True:
                     print("Valid last name")
-                    name_update = first_name_update + last_name_update
+                    name_update = first_name_update + " " + last_name_update
+                    contacts[email]["Name"] = name_update
                     print(f"The name has been updated. Here is your updated list of contacts: \n{contacts}")
                 else: 
                     print("Invalid name entry")
-                    contacts[email]["Name"] = name_update
-                    print("Name updated")
             else: 
                 print("Invalid name entry")
-        elif edit == "2":
+        
+        elif edit == "3":
             number_update = input('Enter the phone number (separated only by dashes - Example "123-456-7890") you would like the phone number changed to: ')
             verified_phone_number = re.match(r"\d{3}-\d{3}-\d{4}", number_update)
             if verified_phone_number:
@@ -113,6 +124,31 @@ def edit_contact(contacts):
                 print(f"The phone number has been updated. Here is your updated list of contacts: \n{contacts}")
             else:
                 print("Invalid phone number entry")
+        elif edit == "4":
+            category_update = input("""What category would you like this contact to have? Choose a selection by entering a number from the menu below: 
+                Category Menu:
+                    1 - Friend
+                    2 - Family
+                    3 - Work
+                    """)
+            if category_update == "1":
+                contacts[email]['Category'] = "Friend"
+                print(f"Contact was successfully updated as a friend. Here is your updated list of contacts: \n{contacts}")
+            elif category_update == "2":
+                contacts[email]['Category'] = "Family"
+                print(f"Contact was successfully updated as a family member. Here is your updated list of contacts: \n{contacts}")
+            elif category_update == "3":
+                contacts[email]['Category']= "Work"
+                print(f"Contact was successfully updated as a work colleague. Here is your updated list of contacts: \n{contacts}")
+            else:
+                print("You entered an invalid choice")
+        elif edit == "5": #DO NOT KNOW HOW TO FIX THIS 
+            custom_field_category_update = input("What would you like to update the Custom Field Category to for this contact? ").title()
+            contacts[email][custom_field_category] = custom_field_category_update
+            custom_field_update = input("What would you like to update the custom field to for this contact? ").title()
+            contacts[email][custom_field] = custom_field_update
+            print(f"Your Custom Field Category and your Custom Field have been updated for this contact to {custom_field_category_update}: {custom_field_update}")
+            print(f"Here is your updated list of contacts: \n{contacts}")
         else:
             print("Invalid entry")
     else:
